@@ -1,0 +1,1182 @@
+{
+	"info": {
+		"_postman_id": "a45c3492-c8c8-4bff-8ae9-0e42ea9ae7c7",
+		"name": "1 - Testes Exploratorios",
+		"description": "#### 1\\. Listar Usuários\n\n- **Método:** GET\n    \n- **URL:** `/usuarios`\n    \n- **Descrição:** Retorna uma lista de todos os usuários cadastrados.\n    \n- **Resposta:**\n    \n- **200 OK:** Lista de usuários em formato JSON.\n    \n- **500 Internal Server Error:** Erro interno do servidor.\n    \n\n#### 2\\. Buscar Usuário\n\n- **Método:** GET\n    \n- **URL:** `/usuarios/{id}`\n    \n- **Descrição:** Retorna os detalhes de um usuário específico.\n    \n- **Parâmetros:**\n    \n- `id` (path): ID do usuário a ser buscado.\n    \n- **Resposta:**\n    \n- **200 OK:** Detalhes do usuário em formato JSON.\n    \n- **404 Not Found:** Usuário não encontrado.\n    \n\n#### 3\\. Cadastrar Usuário\n\n- **Método:** POST\n    \n- **URL:** `/usuarios`\n    \n- **Descrição:** Cadastra um novo usuário.\n    \n- **Corpo da Requisição:** Objeto JSON com as informações do usuário.\n    \n- **Resposta:**\n    \n- **201 Created:** Usuário cadastrado com sucesso.\n    \n- **400 Bad Request:** Requisição inválida.\n    \n\n#### 4\\. Atualizar Usuário\n\n- **Método:** PUT\n    \n- **URL:** `/usuarios/{id}`\n    \n- **Descrição:** Atualiza as informações de um usuário existente.\n    \n- **Parâmetros:**\n    \n- `id` (path): ID do usuário a ser atualizado.\n    \n- **Corpo da Requisição:** Objeto JSON com as informações atualizadas do usuário.\n    \n- **Resposta:**\n    \n- **200 OK:** Usuário atualizado com sucesso.\n    \n- **404 Not Found:** Usuário não encontrado.\n    \n\n#### 5\\. Deletar Usuário\n\n- **Método:** DELETE\n    \n- **URL:** `/usuarios/{id}`\n    \n- **Descrição:** Deleta um usuário existente.\n    \n- **Parâmetros:**\n    \n- `id` (path): ID do usuário a ser deletado.\n    \n- **Resposta:**\n    \n- **204 No Content:** Usuário deletado com sucesso.\n    \n- **404 Not Found:** Usuário não encontrado.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49207143",
+		"_collection_link": "https://www.postman.com/qa5555-6282/workspace/api-serverest/collection/28339579-a45c3492-c8c8-4bff-8ae9-0e42ea9ae7c7?action=share&source=collection_link&creator=49207143"
+	},
+	"item": [
+		{
+			"name": "Login Padrão",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Validate status code",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Validate response is JSON and parse safely",
+							"let jsonData;",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.response.to.be.withBody; // has a body",
+							"    jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"object\");",
+							"});",
+							"",
+							"// Schema validation for response shape",
+							"const schema = {",
+							"    type: \"object\",",
+							"    required: [\"message\", \"authorization\"],",
+							"    additionalProperties: true,",
+							"    properties: {",
+							"        message: { type: \"string\" },",
+							"        authorization: { type: \"string\" }",
+							"    }",
+							"};",
+							"",
+							"",
+							"",
+							"// Check message value",
+							"pm.test(\"Body has message 'Login realizado com sucesso'\", function () {",
+							"    pm.expect(jsonData).to.have.property(\"message\", \"Login realizado com sucesso\");",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{emailPadrao}}\",\n  \"password\": \"{{senhaPadrao}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "administrador",
+							"value": "true",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Login já pré cadastrado"
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrar usuarios",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validar status 201 e mensagem de sucesso\", function () {\r",
+							"    // Verifica status code\r",
+							"    pm.expect(pm.response.code).to.eql(201);\r",
+							"    \r",
+							"    // Verifica mensagem no response\r",
+							"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+							"});\r",
+							"\r",
+							"// Salva a resposta JSON para uso futuro\r",
+							"const resposta = pm.response.json();\r",
+							"pm.collectionVariables.set(\"idUsuario\", resposta._id);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Lista de personagens de Star Wars e Senhor dos Anéis\r",
+							"const personagens = [\r",
+							"    // Star Wars\r",
+							"    { nome: 'Luke Skywalker', universo: 'starwars' },\r",
+							"    { nome: 'Leia Organa', universo: 'starwars' },\r",
+							"    { nome: 'Han Solo', universo: 'starwars' },\r",
+							"    { nome: 'Darth Vader', universo: 'starwars' },\r",
+							"    { nome: 'Obi-Wan Kenobi', universo: 'starwars' },\r",
+							"    { nome: 'Yoda', universo: 'starwars' },\r",
+							"    { nome: 'Anakin Skywalker', universo: 'starwars' },\r",
+							"    { nome: 'Padmé Amidala', universo: 'starwars' },\r",
+							"    { nome: 'Rey', universo: 'starwars' },\r",
+							"    { nome: 'Kylo Ren', universo: 'starwars' },\r",
+							"    { nome: 'Finn', universo: 'starwars' },\r",
+							"    { nome: 'Poe Dameron', universo: 'starwars' },\r",
+							"    { nome: 'Ahsoka Tano', universo: 'starwars' },\r",
+							"    { nome: 'Mace Windu', universo: 'starwars' },\r",
+							"    { nome: 'Qui-Gon Jinn', universo: 'starwars' },\r",
+							"    { nome: 'Lando Calrissian', universo: 'starwars' },\r",
+							"    { nome: 'Chewbacca', universo: 'starwars' },\r",
+							"    { nome: 'R2-D2', universo: 'starwars' },\r",
+							"    { nome: 'C-3PO', universo: 'starwars' },\r",
+							"    { nome: 'Boba Fett', universo: 'starwars' },\r",
+							"    // Senhor dos Anéis\r",
+							"    { nome: 'Frodo Baggins', universo: 'middleearth' },\r",
+							"    { nome: 'Gandalf', universo: 'middleearth' },\r",
+							"    { nome: 'Aragorn', universo: 'middleearth' },\r",
+							"    { nome: 'Legolas', universo: 'middleearth' },\r",
+							"    { nome: 'Gimli', universo: 'middleearth' },\r",
+							"    { nome: 'Samwise Gamgee', universo: 'middleearth' },\r",
+							"    { nome: 'Meriadoc Brandybuck', universo: 'middleearth' },\r",
+							"    { nome: 'Peregrin Took', universo: 'middleearth' },\r",
+							"    { nome: 'Boromir', universo: 'middleearth' },\r",
+							"    { nome: 'Faramir', universo: 'middleearth' },\r",
+							"    { nome: 'Éowyn', universo: 'middleearth' },\r",
+							"    { nome: 'Théoden', universo: 'middleearth' },\r",
+							"    { nome: 'Galadriel', universo: 'middleearth' },\r",
+							"    { nome: 'Elrond', universo: 'middleearth' },\r",
+							"    { nome: 'Arwen', universo: 'middleearth' },\r",
+							"    { nome: 'Saruman', universo: 'middleearth' },\r",
+							"    { nome: 'Sauron', universo: 'middleearth' },\r",
+							"    { nome: 'Gollum', universo: 'middleearth' },\r",
+							"    { nome: 'Bilbo Baggins', universo: 'middleearth' },\r",
+							"    { nome: 'Thorin Oakenshield', universo: 'middleearth' }\r",
+							"];\r",
+							"\r",
+							"// Embaralha o array usando algoritmo Fisher-Yates\r",
+							"function embaralhar(array) {\r",
+							"    const arrayEmbaralhado = [...array];\r",
+							"    for (let i = arrayEmbaralhado.length - 1; i > 0; i--) {\r",
+							"        const j = Math.floor(Math.random() * (i + 1));\r",
+							"        [arrayEmbaralhado[i], arrayEmbaralhado[j]] = [arrayEmbaralhado[j], arrayEmbaralhado[i]];\r",
+							"    }\r",
+							"    return arrayEmbaralhado;\r",
+							"}\r",
+							"\r",
+							"// Gera senha aleatória com letras, números e caracteres especiais\r",
+							"function gerarSenha() {\r",
+							"    const letras = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';\r",
+							"    const numeros = '0123456789';\r",
+							"    const especiais = '!@#$%&*';\r",
+							"    const todos = letras + numeros + especiais;\r",
+							"\r",
+							"    let senha = '';\r",
+							"    senha += letras[Math.floor(Math.random() * letras.length)];\r",
+							"    senha += numeros[Math.floor(Math.random() * numeros.length)];\r",
+							"    senha += especiais[Math.floor(Math.random() * especiais.length)];\r",
+							"\r",
+							"    for (let i = 3; i < 12; i++) {\r",
+							"        senha += todos[Math.floor(Math.random() * todos.length)];\r",
+							"    }\r",
+							"\r",
+							"    return senha.split('').sort(() => Math.random() - 0.5).join('');\r",
+							"}\r",
+							"\r",
+							"// Embaralha a lista e seleciona um personagem aleatório\r",
+							"const personagensEmbaralhados = embaralhar(personagens);\r",
+							"const personagemSelecionado = personagensEmbaralhados[Math.floor(Math.random() * personagensEmbaralhados.length)];\r",
+							"\r",
+							"const nomeAleatorio = personagemSelecionado.nome;\r",
+							"const universo = personagemSelecionado.universo;\r",
+							"\r",
+							"// Gera email baseado no nome e universo\r",
+							"const nomeParaEmail = nomeAleatorio\r",
+							"    .toLowerCase()\r",
+							"    .normalize('NFD')\r",
+							"    .replace(/[\\u0300-\\u036f]/g, '')\r",
+							"    .replace(/\\s+/g, '.')\r",
+							"    .replace(/[^a-z0-9.]/g, '');\r",
+							"\r",
+							"// Separa primeiro e último nome\r",
+							"const partesNome = nomeParaEmail.split('.');\r",
+							"const primeiroNome = partesNome[0];\r",
+							"const ultimoNome = partesNome[partesNome.length - 1];\r",
+							"\r",
+							"// Define domínio baseado no universo\r",
+							"const dominio = universo === 'starwars' ? 'starwars.com' : 'middleearth.com';\r",
+							"\r",
+							"// Decide aleatoriamente entre ordem normal ou invertida\r",
+							"const ordemInvertida = Math.random() < 0.5;\r",
+							"\r",
+							"// Timestamp de 5 dígitos (últimos 5 dígitos do timestamp)\r",
+							"const timestamp = String(Date.now()).slice(-5);\r",
+							"\r",
+							"let emailGerado;\r",
+							"if (ordemInvertida && partesNome.length > 1) {\r",
+							"    emailGerado = `${ultimoNome}.${primeiroNome}.${timestamp}@${dominio}`;\r",
+							"} else {\r",
+							"    emailGerado = `${nomeParaEmail}.${timestamp}@${dominio}`;\r",
+							"}\r",
+							"\r",
+							"// Gera senha\r",
+							"const senhaGerada = gerarSenha();\r",
+							"\r",
+							"// Administrador sempre true\r",
+							"const administrador = 'true';\r",
+							"\r",
+							"// Define as variáveis\r",
+							"pm.collectionVariables.set('nome', nomeAleatorio);\r",
+							"pm.collectionVariables.set('email', emailGerado);\r",
+							"pm.collectionVariables.set('senha', senhaGerada);\r",
+							"pm.collectionVariables.set('administrador', administrador);\r",
+							"\r",
+							"pm.environment.set('nome', nomeAleatorio);\r",
+							"pm.environment.set('email', emailGerado);\r",
+							"pm.environment.set('senha', senhaGerada);\r",
+							"pm.environment.set('administrador', administrador);\r",
+							"\r",
+							"// Console log para todos\r",
+							"console.log('===================================');\r",
+							"console.log('DADOS GERADOS PARA CADASTRO');\r",
+							"console.log('===================================');\r",
+							"console.log('Nome:', nomeAleatorio);\r",
+							"console.log('Email:', emailGerado);\r",
+							"console.log('Senha:', senhaGerada);\r",
+							"console.log('Administrador:', administrador);\r",
+							"console.log('Universo:', universo);\r",
+							"console.log('===================================');\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"{{nome}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{senha}}\",\n    \"administrador\": \"{{administrador}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "201 Created",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Gabs Testes QC\",\n    \"email\": \"ogabs2@qa.com.br\",\n    \"password\": \"123456\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\r\n  \"message\": \"Cadastro realizado com sucesso\",\r\n  \"_id\": \"...\" // ID gerado automaticamente pode variar\r\n}"
+				},
+				{
+					"name": "400 Bad Request",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Gabs Testes QC\",\n    \"email\": \"ogabs2@qa.com.br\",\n    \"password\": \"123456\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Este email já está sendo usado\"\n}"
+				},
+				{
+					"name": "Deve ser True ou False",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{nomeUsuario}}\",\n    \"email\": \"{{emailUsuario}}\",\n    \"password\": \"{{senhaUsuario}}\",\n    \"administrador\": \"{{administrador}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios?administrador=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "administrador",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "x-dns-prefetch-control",
+							"value": "off"
+						},
+						{
+							"key": "x-frame-options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=15552000; includeSubDomains"
+						},
+						{
+							"key": "x-download-options",
+							"value": "noopen"
+						},
+						{
+							"key": "x-content-type-options",
+							"value": "nosniff"
+						},
+						{
+							"key": "x-xss-protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "115"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Oct 2025 16:56:01 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"email\": \"email deve ser um email válido\",\n    \"administrador\": \"administrador deve ser 'true' ou 'false'\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Login realizado com sucesso\", function () {",
+							"    pm.response.to.have.body(\"Login realizado com sucesso\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{senha}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Email Obrigatorio",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/login?{{ultimo_email_criado}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "{{ultimo_email_criado}}",
+									"value": null
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-dns-prefetch-control",
+							"value": "off"
+						},
+						{
+							"key": "x-frame-options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=15552000; includeSubDomains"
+						},
+						{
+							"key": "x-download-options",
+							"value": "noopen"
+						},
+						{
+							"key": "x-content-type-options",
+							"value": "nosniff"
+						},
+						{
+							"key": "x-xss-protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "x-cloud-trace-context",
+							"value": "24622ca9daf3d141fa9fe3901733a184;o=1"
+						},
+						{
+							"key": "date",
+							"value": "Sun, 12 Oct 2025 18:20:06 GMT"
+						},
+						{
+							"key": "server",
+							"value": "Google Frontend"
+						},
+						{
+							"key": "Content-Length",
+							"value": "84"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"email\": \"email é obrigatório\",\n    \"password\": \"password é obrigatório\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Buscar user ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Verifica se o perfil é administrador\r",
+							"pm.test(\"Perfil é administrador\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.administrador).to.equal(\"true\"); // \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/b3fajFX4xf342sp2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"b3fajFX4xf342sp2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"nome\": \"Fulano da Silva\",\n    \"email\": \"fulano@qa.com\",\n    \"password\": \"teste\",\n    \"administrador\": \"true\",\n    \"_id\": \"0uxuPY0cbmQhpEz1\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Atualizar user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validar status 200 e mensagem de sucesso\", function () {",
+							"    // Verifica status code",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"    ",
+							"    // Verifica mensagem no JSON",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"Registro alterado com sucesso\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"{{$randomFirstName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"administrador\": \"{{administrador}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/:_id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						":_id"
+					],
+					"variable": [
+						{
+							"key": "_id",
+							"value": "{{idUsuario}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "400 Bad Request",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \n    \"nome\": \"Gabs Testes atualizado\",\n    \"email\": \"ogabs@qa.com.br\",\n    \"password\": \"123456\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/b3fajFX4xf342sp2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"b3fajFX4xf342sp2"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\r\n  {\r\n    \"message\": \"Este email já está sendo usado\"\r\n  },\r\n  {\r\n    \"email\": \"email deve ser um email válido\"\r\n  },\r\n  {\r\n    \"nome\": \"nome não pode ficar em branco\"\r\n}\r\n]"
+				},
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \n    \"nome\": \"Gabs Testes atualizado\",\n    \"email\": \"ogabs@qa.com.br\",\n    \"password\": \"123456\",\n    \"administrador\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/:_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								":_id"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\r\n    \"message\": \"Registro alterado com sucesso\"\r\n}"
+				}
+			]
+		},
+		{
+			"name": "Lista user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Todos os usuários têm os campos esperados\", function () {\r",
+							"  var jsonData = pm.response.json();\r",
+							"  jsonData.usuarios.forEach(function (usuario) {\r",
+							"    pm.expect(usuario).to.have.property(\"nome\");\r",
+							"    pm.expect(usuario).to.have.property(\"email\");\r",
+							" pm.expect(usuario).to.have.property(\"password\");\r",
+							"  pm.expect(usuario).to.have.property(\"administrador\");\r",
+							"  });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/usuarios",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "StartFragment\n\n## Endpoint GET Usuários\n\n### Visão Geral\n\nEste endpoint recupera uma lista de usuários do sistema. É uma requisição HTTP GET simples que não requer parâmetros.\n\n### Requisição\n\n- **Método:** GET\n    \n- **URL:** `{{baseUrl}}/usuarios`\n    \n\n## Resposta\n\nA resposta retornará um objeto JSON contendo os seguintes campos:\n\n- `quantidade`: Um inteiro que representa o número total de usuários recuperados.\n    \n- `usuarios`: Uma matriz de objetos de usuário, onde cada objeto de usuário contém:\n    \n- `nome`: O nome do usuário (string).\n    \n- `email`: O endereço de e-mail do usuário (string).\n    \n- `password`: A senha do usuário (string).\n    \n- `administrador`: Um booleano que indica se o usuário tem privilégios administrativos.\n    \n- `_id`: Um identificador único para o usuário (string).\n    \n\n## Exemplo de Resposta\n\n``` json\n{\n  \"quantidade\": 1,\n  \"usuarios\": [\n    {\n      \"nome\": \"Fulano da Silva\",\n      \"email\": \"fulano@qa.com\",\n      \"password\": \"teste\",\n      \"administrador\": true,\n      \"_id\": \".ssdddsds3343\"\n    }\n  ]\n}\n\n ```\n\n## Notes\n\nEste endpoint é útil para aplicativos que precisam exibir informações de usuário ou gerenciar funcionalidades relacionadas a usuários.\n\nSe não houver usuários no sistema, o campo `quantidade` será 0 e a matriz `usuarios` estará vazia."
+			},
+			"response": [
+				{
+					"name": "200 OK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "administrador",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "fulano@qa.com",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"quantidade\": 1,\n    \"usuarios\": [\n        {\n            \"nome\": \"Fulano da Silva\",\n            \"email\": \"fulano@qa.com\",\n            \"password\": \"teste\",\n            \"administrador\": \"true\",\n            \"_id\": \"0uxuPY0cbmQhpEz1\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "Lista user",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "administrador",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "fulano@qa.com",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "x-dns-prefetch-control",
+							"value": "off"
+						},
+						{
+							"key": "x-frame-options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "strict-transport-security",
+							"value": "max-age=15552000; includeSubDomains"
+						},
+						{
+							"key": "x-download-options",
+							"value": "noopen"
+						},
+						{
+							"key": "x-content-type-options",
+							"value": "nosniff"
+						},
+						{
+							"key": "x-xss-protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2754"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 17 Sep 2025 23:25:13 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"quantidade\": 13,\n    \"usuarios\": [\n        {\n            \"nome\": \"Fulano da Silva\",\n            \"email\": \"fulano@qa.com\",\n            \"password\": \"teste\",\n            \"administrador\": \"true\",\n            \"_id\": \"0uxuPY0cbmQhpEz1\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"Laverne.Rowe@gmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"CfxfWPy7P8HirwXh\"\n        },\n        {\n            \"nome\": \"Kaden\",\n            \"email\": \"Aniya.Dietrich9@hotmail.com\",\n            \"password\": \"Jrq18YAxmSakEHo\",\n            \"administrador\": \"true\",\n            \"_id\": \"DYzwcmk3NIosT1GC\"\n        },\n        {\n            \"nome\": \"Jaylin\",\n            \"email\": \"gdr@testes.br\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"Jnb2wYwE309gLIQF\"\n        },\n        {\n            \"nome\": \"Delta\",\n            \"email\": \"Stan41@gmail.com\",\n            \"password\": \"y_2eW3Hjbohnt7a\",\n            \"administrador\": \"true\",\n            \"_id\": \"LiegIYlyR6obmwD6\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"Dominic83@gmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"OIHTclIiJjWj97bx\"\n        },\n        {\n            \"nome\": \"Nola\",\n            \"email\": \"Kianna18@hotmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"Owr5KDUUWoxhIGdi\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"Ignatius_Feeney35@gmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"PvAL1PY81WKqIGqu\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"Malika_Schiller@hotmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"UqfGu2zA1TEVWpeN\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"Dewayne41@gmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"el4T64THarHtW4UW\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"Orion_Weimann@yahoo.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"oURgstHdjshgeZS2\"\n        },\n        {\n            \"nome\": \"Manuela\",\n            \"email\": \"Ida_Goyette36@gmail.com\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"oeroQ9hP8anjF4DM\"\n        },\n        {\n            \"nome\": \"Gabs New\",\n            \"email\": \"ogabs@qa.com.tr\",\n            \"password\": \"123456\",\n            \"administrador\": \"true\",\n            \"_id\": \"vuGxWZue5gvddxQs\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Deletar user por ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Registro excluído com sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/usuarios/:_id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"usuarios",
+						":_id"
+					],
+					"variable": [
+						{
+							"key": "_id",
+							"value": "{{idUsuario}}"
+						}
+					]
+				},
+				"description": "**DELETE /usuarios/:_id**\n\nEste endpoint é utilizado para excluir um usuário do sistema com base no seu identificador único (ID).\n\n**Parâmetros da Requisição**\n\n- `_id` (parâmetro de caminho): O identificador único do usuário que você deseja excluir. Este parâmetro é obrigatório e deve ser fornecido na URL.\n    \n\n**Resposta**\n\nApós a exclusão bem-sucedida do usuário, a API retornará uma resposta com a seguinte estrutura:\n\n- Código de Status: 200 OK\n    \n- Tipo de Conteúdo: application/json\n    \n- Corpo:\n    \n- `message`: Uma mensagem de confirmação que indica o sucesso da exclusão. A mensagem será uma string vazia.\n    \n\n**Exemplo de Resposta**\n\n``` json\n{\n    \"message\": \"Registro excluído com sucesso\"\n}\n\n ```\n\nEste endpoint é fundamental para gerenciar contas de usuário, permitindo a remoção de usuários quando necessário."
+			},
+			"response": [
+				{
+					"name": "200 OK - Excluído com Sucesso",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/:_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								":_id"
+							],
+							"variable": [
+								{
+									"key": "_id",
+									"value": "{{idUsuario}}"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\r\n    \"message\": \"Registro excluído com sucesso\"\r\n}"
+				},
+				{
+					"name": "200 OK - Nenhum encontrado",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/b3fajFX4xf342sp2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"b3fajFX4xf342sp2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\r\n    \"message\": \"Nenhum registro excluído\"\r\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "idUsuario",
+			"value": ""
+		},
+		{
+			"key": "administrador",
+			"value": "true",
+			"description": {
+				"content": "Perfil administrador:",
+				"type": "text/plain"
+			}
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "senha",
+			"value": ""
+		},
+		{
+			"key": "nome",
+			"value": ""
+		},
+		{
+			"key": "usuarioEmail",
+			"value": "fulano@qa.com"
+		},
+		{
+			"key": "userSenha",
+			"value": ""
+		},
+		{
+			"key": "emailUsuario",
+			"value": ""
+		}
+	]
+}
