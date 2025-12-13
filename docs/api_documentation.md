@@ -1,8 +1,10 @@
 **Resumo**
+
 - **API**: Serverest (https://serverest.dev/)
 - **Collection**: `apiDicasGabs.json` (contém requests para usuários e login, com testes Postman)
 
 **Variáveis usadas na collection**
+
 - `baseUrl` — URL base da API (ex: `https://serverest.dev`)
 - `email`, `senha`, `emailPadrao`, `senhaPadrao`, `idUsuario`, `administrador`, `nome`, `usuarioEmail`, `userSenha`, `emailUsuario`
 
@@ -56,11 +58,20 @@
   - Sucesso: `200 OK` — `{ "message": "Registro excluído com sucesso" }` ou `{ "message": "Nenhum registro excluído" }` caso não encontre.
 
 **Como importar e configurar no Postman**
+
 - Importe `apiDicasGabs.json` no Postman.
 - Crie ou edite um Environment com `baseUrl=https://serverest.dev` e as variáveis de credenciais.
 - Rode as requests na ordem desejada. A collection contém `pre-request scripts` e testes que salvam `idUsuario` e outros valores em variáveis para uso nas requisições subsequentes.
 
 **Observações e dicas**
+
 - A collection utiliza scripts para gerar nomes, emails e senhas aleatórias ao cadastrar usuários (veja `Cadastrar usuarios` pre-request script).
 - Certifique-se de ajustar `baseUrl` para `https://serverest.dev` antes de rodar.
 - Se preferir rodar via CLI, use `newman` (ver `README.md`).
+
+---
+
+**Resumo rápido (link para README)**
+
+Veja o README principal para uma visão mais completa, badges, autor e melhorias planejadas: `README.md`.
+
