@@ -71,7 +71,7 @@ npx newman run apiDicasGabs.json --environment postman_environment.json
 
 **Gabriel Roquim**
 - GitHub: [@gabrielroquim](https://github.com/gabrielroquim)
-- LinkedIn: [Seu LinkedIn]
+- LinkedIn: [Gabs QA](https://www.linkedin.com/in/gabsqa/)
 
 ---
 
@@ -80,6 +80,18 @@ npx newman run apiDicasGabs.json --environment postman_environment.json
 - [ServeRest](https://github.com/ServeRest/ServeRest) - API utilizada nos testes
 - [Paulo Gonçalves](https://github.com/PauloGoncalvesBH) - Criador da ServeRest
 - Comunidade de QA Brasil
+
+- Repositório ServeRest: https://github.com/ServeRest/ServeRest
+
+## ⚙️ Rodando a ServeRest localmente
+
+Se preferir executar a API localmente (útil para desenvolvimento/testes offline), instale e rode a versão mais recente com o comando:
+
+```
+npx serverest@latest
+```
+
+Após subir, ajuste `baseUrl` para o endpoint local conforme o console do Serverest e execute a collection normalmente.
 
 ## 📚 Recursos Úteis
 

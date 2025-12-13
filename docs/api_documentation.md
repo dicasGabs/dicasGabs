@@ -69,6 +69,18 @@
 - Certifique-se de ajustar `baseUrl` para `https://serverest.dev` antes de rodar.
 - Se preferir rodar via CLI, use `newman` (ver `README.md`).
 
+- Se preferir rodar via CLI, use `newman` (ver `README.md`).
+
+### Rodando a ServeRest localmente
+
+Se quiser executar a API localmente para desenvolvimento, instale/execute a ServeRest com:
+
+```
+npx serverest@latest
+```
+
+O repositório oficial da ServeRest está em: https://github.com/ServeRest/ServeRest
+
 ---
 
 **Resumo rápido (link para README)**
