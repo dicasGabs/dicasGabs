@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://raw.githubusercontent.com/gabrielroquim/gabrielroquim/master/assets/gabs-banner-git.png" alt="Gabriel Roquim - GABS QA" width="100%"/>
+  <img src="https://raw.githubusercontent.com/dicasGabs/dicasGabs/master/assets/gabs-banner-git.png" alt="Gabriel Roquim - GABS QA" width="100%"/>
 
   <h1>Olá, sou Gabriel Roquim 👋</h1>
 
@@ -62,8 +62,8 @@ Pós-graduado em **Engenharia de Qualidade e Teste de Software pela PUC Minas** 
 ## 📊 GitHub Stats
 
 <div align="center">
-  <img height="180em" src="https://github-readme-stats.shion.dev/api?username=gabrielroquim&show_icons=true&theme=tokyonight&include_all_commits=true"/>
-  <img height="180em" src="https://github-readme-stats.shion.dev/api/top-langs/?username=gabrielroquim&layout=compact&langs_count=7&theme=tokyonight"/>
+  <img height="180em" src="https://github-readme-stats.shion.dev/api?username=dicasGabs&show_icons=true&theme=tokyonight&include_all_commits=true"/>
+  <img height="180em" src="https://github-readme-stats.shion.dev/api/top-langs/?username=dicasGabs&layout=compact&langs_count=7&theme=tokyonight"/>
 </div>
 
 ---
